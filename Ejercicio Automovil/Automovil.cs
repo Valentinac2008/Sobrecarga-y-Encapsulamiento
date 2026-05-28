@@ -35,7 +35,20 @@ namespace SimuladorAutomovil
         public int VelocidadActual => _velocidadActual;
         public bool MotorEncendido => _motorEncendido;
         public bool ModoCrucero => _modoCrucero;
-
+        
+        public string Marca{
+            get{return _marca}
+            private set{
+                if(!string.IsNullOrWitheSpace(value)){
+                    _marca = value;
+                }
+            }
+        public bool CajaAutomatica{
+            get{return _xajaAutomatica}
+            private set{
+                _cajaAutomatica = value;
+            }
+        }
         public Automovil(string marca, bool cajaAutomatica)
         {
             Marca = marca;
