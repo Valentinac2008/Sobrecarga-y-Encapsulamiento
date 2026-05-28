@@ -44,9 +44,9 @@ namespace SimuladorSmartTV
             bool esPremium
         )
         {
-            _marca = marca;
-            _pulgadas = pulgadas;
-            _esPremium = esPremium;
+            Marca = marca;
+            Pulgadas = pulgadas;
+            EsPremium = esPremium;
 
             _encendido = false;
             _canalActual = 1;
