@@ -38,8 +38,8 @@ namespace SimuladorAutomovil
 
         public Automovil(string marca, bool cajaAutomatica)
         {
-            _marca = marca;
-            _cajaAutomatica = cajaAutomatica;
+            Marca = marca;
+            CajaAutomatica = cajaAutomatica;
             _motorEncendido = false;
             _velocidadActual = 0;
             _modoCrucero = false;
