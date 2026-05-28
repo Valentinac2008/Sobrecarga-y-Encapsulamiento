@@ -37,7 +37,25 @@ namespace SimuladorSmartTV
                     : _volumen.ToString();
             }
         }
-
+     public string Marca{
+            get{return _marca}
+            private set{
+                if(!string.IsNullOrWitheSpace(value)){
+                    _marca = value;
+                }
+            }
+        public int Pulgadas{
+            get{return _pulgadas}
+            private set{
+                _pulgadas = value;
+            }
+        }
+        public bool EsPremium{
+            get{return _esPremium}
+            private set{
+                _esPremium = value;
+            }
+        }
         public SmartTV(
             string marca,
             int pulgadas,
