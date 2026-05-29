@@ -9,152 +9,168 @@ namespace ConsoleApp2
     public class Bateria
     {
 
+        public class Bateria
+    {
         private int _porcentajeCarga;
         private int _saludBateria;
         private bool _conectadoCargador;
         private bool _modoAhorroEnergia;
-
-
-        private int _acumuladorCarga;
-
-
-        public Bateria()
-        {
-            _porcentajeCarga = 50;
-            _saludBateria = 100;
-            _conectadoCargador = false;
-            _modoAhorroEnergia = false;
-            _acumuladorCarga = 0;
-        }
+        private int _cargaAcumuladaEnCiclo;
 
         public int PorcentajeCarga
         {
             get { return _porcentajeCarga; }
+            private set
+            {
+                if (value < 0)
+                {
+                    _porcentajeCarga = 0;
+                }
+                else if (value > 100)
+                {
+                    _porcentajeCarga = 100;
+                }
+                else
+                {
+                    _porcentajeCarga = value;
+                }
+            }
         }
 
         public int SaludBateria
         {
             get { return _saludBateria; }
+            private set
+            {
+                if (value < 0)
+                {
+                    _saludBateria = 0;
+                }
+                else if (value > 100)
+                {
+                    _saludBateria = 100;
+                }
+                else
+                {
+                    _saludBateria = value;
+                }
+            }
         }
 
         public bool ConectadoCargador
         {
             get { return _conectadoCargador; }
+            private set { _conectadoCargador = value; }
         }
 
         public bool ModoAhorroEnergia
         {
             get { return _modoAhorroEnergia; }
+            private set { _modoAhorroEnergia = value; }
         }
-
 
         public string EstadoTexto
         {
             get
             {
-                if (_conectadoCargador)
+                if (ConectadoCargador)
                 {
-                    return $"CARGANDO - BATERIA: {_porcentajeCarga}%";
+                    return $"CARGANDO - BATERIA: {PorcentajeCarga}%";
                 }
-                else
-                {
-                    return $"BATERIA: {_porcentajeCarga}%";
-                }
+
+                return $"BATERIA: {PorcentajeCarga}%";
             }
         }
-            public void AlternarCargador()
+
+        public Bateria()
         {
-            _conectadoCargador = !_conectadoCargador;
+            PorcentajeCarga = 50;
+            SaludBateria = 100;
+            ConectadoCargador = false;
+            ModoAhorroEnergia = false;
+            _cargaAcumuladaEnCiclo = 0;
+        }
+
+        public void AlternarCargador()
+        {
+            ConectadoCargador = !ConectadoCargador;
         }
 
         public void ConsumirEnergia()
         {
             int consumo = 1;
 
-            if (_modoAhorroEnergia)
+            if (ModoAhorroEnergia)
             {
-                consumo = consumo / 2;
-
+                consumo = 1 / 2;
                 if (consumo == 0)
                 {
                     consumo = 1;
                 }
             }
 
-            _porcentajeCarga -= consumo;
-
-            if (_porcentajeCarga < 0)
-            {
-                _porcentajeCarga = 0;
-            }
+            PorcentajeCarga -= consumo;
 
             VerificarModoAhorro();
         }
 
-
         public void ConsumirEnergia(int consumo)
         {
-            if (_modoAhorroEnergia)
+            if (consumo < 0)
+            {
+                return;
+            }
+
+            if (ModoAhorroEnergia)
             {
                 consumo = consumo / 2;
             }
 
-            _porcentajeCarga -= consumo;
-
-            if (_porcentajeCarga < 0)
-            {
-                _porcentajeCarga = 0;
-            }
+            PorcentajeCarga -= consumo;
 
             VerificarModoAhorro();
         }
 
-
         public void CicloDeCarga()
         {
-            if (_conectadoCargador)
+            if (!ConectadoCargador)
             {
+                return;
+            }
 
-                if (_porcentajeCarga < _saludBateria)
+            if (PorcentajeCarga < SaludBateria)
+            {
+                int cargaAntes = PorcentajeCarga;
+
+                PorcentajeCarga += 10;
+
+                if (PorcentajeCarga > SaludBateria)
                 {
-                    _porcentajeCarga += 10;
-                    _acumuladorCarga += 10;
+                    PorcentajeCarga = SaludBateria;
+                }
 
-                    if (_porcentajeCarga > _saludBateria)
-                    {
-                        _porcentajeCarga = _saludBateria;
-                    }
+                _cargaAcumuladaEnCiclo += PorcentajeCarga - cargaAntes;
 
-
-                    if (_acumuladorCarga >= 100)
-                    {
-                        _saludBateria--;
-
-                        if (_saludBateria < 0)
-                        {
-                            _saludBateria = 0;
-                        }
-
-                        _acumuladorCarga = 0;
-                    }
+                if (_cargaAcumuladaEnCiclo >= 100)
+                {
+                    SaludBateria--;
+                    _cargaAcumuladaEnCiclo = 0;
                 }
             }
 
             VerificarModoAhorro();
         }
 
-
         private void VerificarModoAhorro()
         {
-            if (_porcentajeCarga < 20)
+            if (PorcentajeCarga < 20)
             {
-                _modoAhorroEnergia = true;
+                ModoAhorroEnergia = true;
             }
 
-
-            if (_porcentajeCarga > 50)
+            if (PorcentajeCarga > 50)
             {
-                _modoAhorroEnergia = false;
+                ModoAhorroEnergia = false;
             }
         }
     }
