@@ -9,6 +9,8 @@ namespace ConsoleApp1
     public class Invernadero
     {
 
+         public class Invernadero
+    {
         private string _nombreSector;
         private int _temperaturaActual;
         private int _humedadSuelo;
@@ -16,40 +18,72 @@ namespace ConsoleApp1
         private bool _calefaccionActiva;
         private string _tipoCultivo;
 
-
-        public Invernadero(string nombreSector, string tipoCultivo)
+        public string NombreSector
         {
-            _nombreSector = nombreSector;
-            _tipoCultivo = tipoCultivo.ToUpper();
-
-            _temperaturaActual = 25;
-            _humedadSuelo = 50;
-
-            _sistemaRiegoActivo = false;
-            _calefaccionActiva = false;
+            get { return _nombreSector; }
+            private set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _nombreSector = value.ToUpper();
+                }
+            }
         }
-
 
         public int TemperaturaActual
         {
             get { return _temperaturaActual; }
+            private set { _temperaturaActual = value; }
         }
 
         public int HumedadSuelo
         {
             get { return _humedadSuelo; }
+            private set
+            {
+                if (value < 0)
+                {
+                    _humedadSuelo = 0;
+                }
+                else if (value > 100)
+                {
+                    _humedadSuelo = 100;
+                }
+                else
+                {
+                    _humedadSuelo = value;
+                }
+            }
         }
 
         public bool SistemaRiegoActivo
         {
             get { return _sistemaRiegoActivo; }
+            private set { _sistemaRiegoActivo = value; }
         }
 
         public bool CalefaccionActiva
         {
             get { return _calefaccionActiva; }
+            private set { _calefaccionActiva = value; }
         }
 
+        public string TipoCultivo
+        {
+            get { return _tipoCultivo; }
+            private set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    string cultivo = value.ToUpper();
+
+                    if (cultivo == "TROPICAL" || cultivo == "DESERTICO")
+                    {
+                        _tipoCultivo = cultivo;
+                    }
+                }
+            }
+        }
 
         public string ReporteEstado
         {
@@ -57,124 +91,77 @@ namespace ConsoleApp1
             {
                 string alerta = "PARAMETROS OPTIMOS";
 
-                if (_tipoCultivo == "TROPICAL")
+                if (TipoCultivo == "TROPICAL")
                 {
-                    if (_humedadSuelo < 60)
+                    if (HumedadSuelo < 60)
                     {
                         alerta = "BAJA HUMEDAD";
                     }
-                    else if (_temperaturaActual < 20 || _temperaturaActual > 28)
+                    else if (TemperaturaActual < 20 || TemperaturaActual > 28)
                     {
                         alerta = "TEMPERATURA INCORRECTA";
                     }
                 }
-
-                else if (_tipoCultivo == "DESERTICO")
+                else if (TipoCultivo == "DESERTICO")
                 {
-                    if (_humedadSuelo > 20)
+                    if (HumedadSuelo > 20)
                     {
                         alerta = "EXCESO DE HUMEDAD";
                     }
-                    else if (_temperaturaActual < 25 || _temperaturaActual > 35)
+                    else if (TemperaturaActual < 25 || TemperaturaActual > 35)
                     {
                         alerta = "TEMPERATURA INCORRECTA";
                     }
                 }
 
-                return $"SECTOR: {_nombreSector.ToUpper()} - CULTIVO: {_tipoCultivo} - ALERTA: {alerta}";
+                return $"SECTOR: {NombreSector} - CULTIVO: {TipoCultivo} - ALERTA: {alerta}";
             }
         }
 
+        public Invernadero(string nombreSector, string tipoCultivo)
+        {
+            NombreSector = nombreSector;
+            TipoCultivo = tipoCultivo;
+
+            TemperaturaActual = 25;
+            HumedadSuelo = 50;
+            SistemaRiegoActivo = false;
+            CalefaccionActiva = false;
+        }
 
         public void SimularClima()
         {
-            _humedadSuelo -= 5;
-            _temperaturaActual += 1;
-
-            if (_humedadSuelo < 0)
-            {
-                _humedadSuelo = 0;
-            }
+            HumedadSuelo -= 5;
+            TemperaturaActual += 1;
         }
 
         public void SimularClima(int humedad, int temperatura)
         {
-            _humedadSuelo = humedad;
-            _temperaturaActual = temperatura;
-
-            if (_humedadSuelo > 100)
-            {
-                _humedadSuelo = 100;
-            }
-
-            if (_humedadSuelo < 0)
-            {
-                _humedadSuelo = 0;
-            }
+            HumedadSuelo = humedad;
+            TemperaturaActual = temperatura;
         }
 
         public void ControlAutomatico()
         {
-            if (_tipoCultivo == "TROPICAL")
+            if (TipoCultivo == "TROPICAL")
             {
-
-                if (_humedadSuelo < 60)
-                {
-                    if (_humedadSuelo < 100)
-                    {
-                        _sistemaRiegoActivo = true;
-                    }
-                }
-                else
-                {
-                    _sistemaRiegoActivo = false;
-                }
-
-
-                if (_temperaturaActual < 20)
-                {
-                    if (_temperaturaActual <= 45)
-                    {
-                        _calefaccionActiva = true;
-                    }
-                }
-                else
-                {
-                    _calefaccionActiva = false;
-                }
+                SistemaRiegoActivo = HumedadSuelo < 60 && HumedadSuelo < 100;
+                CalefaccionActiva = TemperaturaActual < 20 && TemperaturaActual <= 45;
+            }
+            else if (TipoCultivo == "DESERTICO")
+            {
+                SistemaRiegoActivo = false;
+                CalefaccionActiva = TemperaturaActual < 25 && TemperaturaActual <= 45;
             }
 
-            else if (_tipoCultivo == "DESERTICO")
+            if (HumedadSuelo >= 100)
             {
-
-                if (_humedadSuelo > 20)
-                {
-                    _sistemaRiegoActivo = false;
-                }
-
-
-                if (_temperaturaActual < 25)
-                {
-                    if (_temperaturaActual <= 45)
-                    {
-                        _calefaccionActiva = true;
-                    }
-                }
-                else
-                {
-                    _calefaccionActiva = false;
-                }
+                SistemaRiegoActivo = false;
             }
 
-
-            if (_humedadSuelo >= 100)
+            if (TemperaturaActual > 45)
             {
-                _sistemaRiegoActivo = false;
-            }
-
-            if (_temperaturaActual > 45)
-            {
-                _calefaccionActiva = false;
+                CalefaccionActiva = false;
             }
         }
     }
