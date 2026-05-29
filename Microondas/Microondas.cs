@@ -13,85 +13,132 @@ namespace SimuladorMicroondas
         private bool _puertaAbierta;
         private bool _enFuncionamiento;
 
+        public int Potencia
+        {
+            get { return _potencia; }
+            private set
+            {
+                if (value < 1)
+                {
+                    _potencia = 1;
+                }
+                else if (value > 10)
+                {
+                    _potencia = 10;
+                }
+                else
+                {
+                    _potencia = value;
+                }
+            }
+        }
+
+        public int TiempoSegundos
+        {
+            get { return _tiempoSegundos; }
+            private set
+            {
+                if (value < 0)
+                {
+                    _tiempoSegundos = 0;
+                }
+                else if (value > 3600)
+                {
+                    _tiempoSegundos = 3600;
+                }
+                else
+                {
+                    _tiempoSegundos = value;
+                }
+            }
+        }
+
+        public bool PuertaAbierta
+        {
+            get { return _puertaAbierta; }
+            private set { _puertaAbierta = value; }
+        }
+
+        public bool EnFuncionamiento
+        {
+            get { return _enFuncionamiento; }
+            private set { _enFuncionamiento = value; }
+        }
+
         public string PantallaTiempo
         {
             get
             {
-                int minutos = _tiempoSegundos / 60;
-                int segundos = _tiempoSegundos % 60;
-
-                return $"{minutos:D2}:{segundos:D2}";
+                int minutos = TiempoSegundos / 60;
+                int segundos = TiempoSegundos % 60;
+                return $"{minutos:00}:{segundos:00}";
             }
         }
 
-        public int Potencia => _potencia;
-        public bool PuertaAbierta => _puertaAbierta;
-        public bool EnFuncionamiento => _enFuncionamiento;
-
-        public Microondas(int potencia)
+        public Microondas()
         {
-            _potencia = potencia;
-            _tiempoSegundos = 0;
-            _puertaAbierta = false;
-            _enFuncionamiento = false;
+            Potencia = 5;
+            TiempoSegundos = 0;
+            PuertaAbierta = false;
+            EnFuncionamiento = false;
         }
+
         public void AgregarTiempo()
         {
             AgregarTiempo(30);
         }
+
         public void AgregarTiempo(int segundos)
         {
-            _tiempoSegundos += segundos;
-
-           
-            if (_tiempoSegundos > 3600)
+            if (segundos < 0)
             {
-                _tiempoSegundos = 3600;
+                return;
+            }
+
+            TiempoSegundos += segundos;
+
+            if (TiempoSegundos > 3600)
+            {
+                TiempoSegundos = 3600;
             }
         }
 
         public void Iniciar()
         {
-            if (_puertaAbierta)
+            if (PuertaAbierta)
             {
-                Console.WriteLine(
-                    "No se puede iniciar con la puerta abierta."
-                );
+                Console.WriteLine("No se puede iniciar con la puerta abierta.");
                 return;
             }
 
-            if (_tiempoSegundos == 0)
+            if (TiempoSegundos == 0)
             {
-                Console.WriteLine(
-                    "Debe agregar tiempo."
-                );
+                Console.WriteLine("No hay tiempo configurado.");
                 return;
             }
 
-            _enFuncionamiento = true;
+            EnFuncionamiento = true;
         }
+
         public void Detener()
         {
-            
-            if (_enFuncionamiento)
+            if (EnFuncionamiento)
             {
-                _enFuncionamiento = false;
+                EnFuncionamiento = false;
             }
-           
             else
             {
-                _tiempoSegundos = 0;
+                TiempoSegundos = 0;
             }
         }
 
         public void AbrirCerrarPuerta()
         {
-            _puertaAbierta = !_puertaAbierta;
+            PuertaAbierta = !PuertaAbierta;
 
-            if (_puertaAbierta &&
-                _enFuncionamiento)
+            if (PuertaAbierta && EnFuncionamiento)
             {
-                _enFuncionamiento = false;
+                EnFuncionamiento = false;
             }
         }
     }
