@@ -14,48 +14,69 @@ namespace SimuladorAutomovil
         private bool _cajaAutomatica;
         private bool _modoCrucero;
 
+        public string Marca
+        {
+            get { return _marca; }
+            private set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _marca = value;
+                }
+            }
+        }
+
+        public bool CajaAutomatica
+        {
+            get { return _cajaAutomatica; }
+            private set { _cajaAutomatica = value; }
+        }
+
+        public bool MotorEncendido
+        {
+            get { return _motorEncendido; }
+            private set { _motorEncendido = value; }
+        }
+
+        public int VelocidadActual
+        {
+            get { return _velocidadActual; }
+            private set
+            {
+                if (value < 0)
+                {
+                    _velocidadActual = 0;
+                }
+                else
+                {
+                    _velocidadActual = value;
+                }
+            }
+        }
+
+        public bool ModoCrucero
+        {
+            get { return _modoCrucero; }
+            private set { _modoCrucero = value; }
+        }
+
         public string Identificador
         {
             get
             {
-                string tipoCaja;
-                if (_cajaAutomatica)
-                {
-                    tipoCaja= "AUTO";
-                }
-                else
-                {
-                    tipoCaja = "MAN";
-                }
-
-                return _marca.Substring(0, 3).ToUpper(); +"-" + tipoCaja + "-2026";
+                string prefijo = Marca.Substring(0, Math.Min(3, Marca.Length)).ToUpper();
+                string tipoCaja = CajaAutomatica ? "AUTO" : "MAN";
+                return $"{prefijo}-{tipoCaja}-{DateTime.Now.Year}";
             }
         }
 
-        public int VelocidadActual => _velocidadActual;
-        public bool MotorEncendido => _motorEncendido;
-        public bool ModoCrucero => _modoCrucero;
-        
-        public string Marca{
-            get{return _marca}
-            private set{
-                if(!string.IsNullOrWitheSpace(value)){
-                    _marca = value;
-                }
-            }
-        public bool CajaAutomatica{
-            get{return _xajaAutomatica}
-            private set{
-                _cajaAutomatica = value;
-            }
-        }
         public Automovil(string marca, bool cajaAutomatica)
         {
             Marca = marca;
             CajaAutomatica = cajaAutomatica;
-            _motorEncendido = false;
-            _velocidadActual = 0;
-            _modoCrucero = false;
+            MotorEncendido = false;
+            VelocidadActual = 0;
+            ModoCrucero = false;
         }
 
         public void EncenderApagar()
