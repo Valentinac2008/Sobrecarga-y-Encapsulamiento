@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimuladorSmartTV
 {
-  class SmartTV
+ public class SmartTV
 {
     private string marca;
     private int pulgadas;
