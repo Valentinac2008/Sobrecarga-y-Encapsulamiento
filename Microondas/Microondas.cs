@@ -6,140 +6,90 @@ using System.Threading.Tasks;
 
 namespace SimuladorMicroondas
 {
-    public class Microondas
+  public class Microondas
+{
+    private int _potencia;
+    private int _tiempoSegundos;
+    private bool _puertaAbierta;
+    private bool _enFuncionamiento;
+
+    public Microondas(int _potencia)
     {
-        private int _potencia;
-        private int _tiempoSegundos;
-        private bool _puertaAbierta;
-        private bool _enFuncionamiento;
+        this.Potencia = _potencia;
+        this.TiempoSegundos = 0;
+        this.PuertaAbierta = false;
+        this.EnFuncionamiento = false;
+    }
 
-        public int Potencia
+    public int Potencia
+    {
+        get { return _potencia; }
+        set { _potencia = value; }
+    }
+
+    public int TiempoSegundos
+    {
+        get { return _tiempoSegundos; }
+        set { _tiempoSegundos = value; }
+    }
+
+    public bool PuertaAbierta
+    {
+        get { return _puertaAbierta; }
+        set { _puertaAbierta = value; }
+    }
+
+    public bool EnFuncionamiento
+    {
+        get { return _enFuncionamiento; }
+        set { _enFuncionamiento = value; }
+    }
+
+    public string PANTALLA_TIEMPO
+    {
+        get
         {
-            get { return _potencia; }
-            private set
-            {
-                if (value < 1)
-                {
-                    _potencia = 1;
-                }
-                else if (value > 10)
-                {
-                    _potencia = 10;
-                }
-                else
-                {
-                    _potencia = value;
-                }
-            }
+            int minutos = TiempoSegundos / 60;
+            int segundos = TiempoSegundos % 60;
+
+            return minutos.ToString("00") + ":" + segundos.ToString("00");
         }
+    }
 
-        public int TiempoSegundos
+    public void AgregarTiempo()
+    {
+        TiempoSegundos += 30;
+    }
+
+    public void AgregarTiempo(int segundos)
+    {
+        TiempoSegundos += segundos;
+    }
+
+    public void Iniciar()
+    {
+        if (!PuertaAbierta && TiempoSegundos > 0)
         {
-            get { return _tiempoSegundos; }
-            private set
-            {
-                if (value < 0)
-                {
-                    _tiempoSegundos = 0;
-                }
-                else if (value > 3600)
-                {
-                    _tiempoSegundos = 3600;
-                }
-                else
-                {
-                    _tiempoSegundos = value;
-                }
-            }
-        }
-
-        public bool PuertaAbierta
-        {
-            get { return _puertaAbierta; }
-            private set { _puertaAbierta = value; }
-        }
-
-        public bool EnFuncionamiento
-        {
-            get { return _enFuncionamiento; }
-            private set { _enFuncionamiento = value; }
-        }
-
-        public string PantallaTiempo
-        {
-            get
-            {
-                int minutos = TiempoSegundos / 60;
-                int segundos = TiempoSegundos % 60;
-                return $"{minutos:00}:{segundos:00}";
-            }
-        }
-
-        public Microondas()
-        {
-            Potencia = 5;
-            TiempoSegundos = 0;
-            PuertaAbierta = false;
-            EnFuncionamiento = false;
-        }
-
-        public void AgregarTiempo()
-        {
-            AgregarTiempo(30);
-        }
-
-        public void AgregarTiempo(int segundos)
-        {
-            if (segundos < 0)
-            {
-                return;
-            }
-
-            TiempoSegundos += segundos;
-
-            if (TiempoSegundos > 3600)
-            {
-                TiempoSegundos = 3600;
-            }
-        }
-
-        public void Iniciar()
-        {
-            if (PuertaAbierta)
-            {
-                Console.WriteLine("No se puede iniciar con la puerta abierta.");
-                return;
-            }
-
-            if (TiempoSegundos == 0)
-            {
-                Console.WriteLine("No hay tiempo configurado.");
-                return;
-            }
-
             EnFuncionamiento = true;
         }
+    }
 
-        public void Detener()
-        {
-            if (EnFuncionamiento)
-            {
-                EnFuncionamiento = false;
-            }
-            else
-            {
-                TiempoSegundos = 0;
-            }
-        }
+    public void Detener()
+    {
+        EnFuncionamiento = false;
+    }
 
-        public void AbrirCerrarPuerta()
-        {
-            PuertaAbierta = !PuertaAbierta;
+    public void AbrirCerrarPuerta()
+    {
+        PuertaAbierta = !PuertaAbierta;
+    }
 
-            if (PuertaAbierta && EnFuncionamiento)
-            {
-                EnFuncionamiento = false;
-            }
-        }
+    public void Mostrar()
+    {
+        Console.WriteLine("Tiempo: " + PANTALLA_TIEMPO);
+        Console.WriteLine("Potencia: " + Potencia);
+        Console.WriteLine("Puerta abierta: " + PuertaAbierta);
+    }
+}
     }
 }
